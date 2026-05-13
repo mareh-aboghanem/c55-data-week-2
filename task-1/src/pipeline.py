@@ -31,14 +31,20 @@ from .transforms import (
 
 def read_csv(path: str) -> list[dict]:
     """Read a CSV file into a list of dicts. I/O only — no business rules."""
-    # TODO: implement using csv.DictReader.
-    raise NotImplementedError
+    with open(path, mode='r', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        return list(reader)
 
 
 def write_csv(rows: list[dict], path: str) -> None:
     """Write a list of dicts to CSV. I/O only — no business rules."""
-    # TODO: implement using csv.DictWriter.
-    raise NotImplementedError
+    if not rows:
+        return 
+    keys_ofdictionry = rows[0].keys()
+    with open(path, mode='w', encoding='utf-8', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=keys_ofdictionry)
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def run() -> None:
@@ -53,6 +59,7 @@ def run() -> None:
     # TODO: cast price / quantity / revenue / vat to the right types here
     # if your transforms left them as strings, then iterate over `data`
     # to build Transaction(**row) for each cleaned row.
+       
     transactions = [Transaction(**row) for row in data]
 
     # Output dir must exist. Use pathlib for cross-platform safety.

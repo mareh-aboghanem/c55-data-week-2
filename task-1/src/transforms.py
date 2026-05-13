@@ -18,8 +18,16 @@ def remove_invalid(rows: list[dict]) -> list[dict]:
 
     Empty here means missing, "", or whitespace-only.
     """
-    # TODO: implement. Return a new list, do not mutate `rows`.
-    raise NotImplementedError
+    result = []
+    for row in rows:
+        product_name = row.get("product_name", "")
+        try:
+            price = float(row.get("price", 0))
+        except ValueError:
+            continue
+        if product_name.strip() and price>0:
+            result.append(row.copy())  
+    return result
 
 
 def clean_fields(rows: list[dict]) -> list[dict]:
@@ -31,8 +39,18 @@ def clean_fields(rows: list[dict]) -> list[dict]:
 
     Return a new list. Do not mutate the input rows.
     """
-    # TODO: implement.
-    raise NotImplementedError
+    result = []
+    for row in rows:
+        product_name = row.get("product_name", "").strip().title()
+        customer_email = row.get("customer_email", "").strip().lower()
+        category = row.get("category", "").strip()
+        category = category if category else "Unknown"
+        new_row = row.copy()
+        new_row["product_name"] = product_name
+        new_row["customer_email"] = customer_email
+        new_row["category"] = category
+        result.append(new_row)
+    return result
 
 
 def calculate_revenue(rows: list[dict], vat_rate: float = 0.21) -> list[dict]:
@@ -40,11 +58,24 @@ def calculate_revenue(rows: list[dict], vat_rate: float = 0.21) -> list[dict]:
 
     Round both to 2 decimal places. Coerce price/quantity from string if needed.
     """
-    # TODO: implement.
-    raise NotImplementedError
+    result = []
+    for row in rows:
+        price = float(row["price"])
+        quantity = int(row["quantity"])
+        revenue = round(price * quantity, 2)
+        vat = round(revenue * vat_rate, 2)
+        new_row = row.copy()
+        new_row["revenue"] = revenue
+        new_row["vat"] = vat
+        result.append(new_row)
+    return result
 
 
 def filter_zero_quantity(rows: list[dict]) -> list[dict]:
     """Remove rows where quantity is 0."""
-    # TODO: implement.
-    raise NotImplementedError
+    result = []
+    for row in rows:
+        quantity = row.get("quantity", 0)
+        if quantity != 0:
+            result.append(row.copy())
+    return result

@@ -9,9 +9,8 @@ Tasks (see chapter Task 1):
   3. Raise ValueError if either is missing — do NOT let None silently propagate.
 """
 import os
-
 from dotenv import load_dotenv
-
+#print("dotenv works!")
 
 # Load .env values into os.environ before they're read by _required().
 # (Step 1 from the docstring above; already wired up so the rest of the
@@ -21,9 +20,11 @@ load_dotenv()
 
 def _required(name: str) -> str:
     """Read an env var; fail loudly if missing."""
-    # TODO 2: Read os.environ[name]; if not set, raise ValueError with a
-    # message that names the missing variable AND points at .env.example.
-    raise NotImplementedError("Implement _required: see TODO 2 in config.py")
+    path = os.environ.get(name)
+    if path is None:
+      raise ValueError(f"Missing required environment path: {name},See .env.example for details.")
+    return path
+
 
 
 # TODO 3: Replace the placeholder lines below by calling _required(...) for
@@ -31,5 +32,5 @@ def _required(name: str) -> str:
 # module by the rest of the pipeline as a relative import
 # (`from .config import INPUT_PATH, ...`), since the pipeline runs as
 # `python -m src.pipeline`.
-INPUT_PATH: str = ""   # TODO: _required("INPUT_PATH")
-OUTPUT_PATH: str = ""  # TODO: _required("OUTPUT_PATH")
+INPUT_PATH: str = _required("INPUT_PATH")
+OUTPUT_PATH: str = _required("OUTPUT_PATH") 
